@@ -26,34 +26,37 @@ export default class Utils {
     static tilePolylineForPosition(startPos: cc.Vec2, polylinePoints: cc.Vec2[]): cc.Vec2[] {
         let paths: cc.Vec2[] = [];
         paths[0] = startPos;
-        for(let i=0;i<polylinePoints.length;i++){
-            paths[i] = cc.v2(startPos.x + polylinePoints[i].x,startPos.y - polylinePoints[i].y);
+        for (let i = 0; i < polylinePoints.length; i++) {
+            paths[i] = cc.v2(startPos.x + polylinePoints[i].x, startPos.y - polylinePoints[i].y);
         }
         return paths;
     }
 
-    static getDir(vec2:cc.Vec2):GameDirection{
-            let standrad: cc.Vec2 = cc.v2(1, 0);
-            let angle = cc.misc.radiansToDegrees(standrad.signAngle(vec2));
-            console.log(angle);
-            if (angle > 360) {
-                angle -= 360;
-            } else if (angle < 0) {
-                angle += 360;
-            }
-    
-            if (angle > 45 && angle <= 135) {
-                return GameDirection.Up;
-            } else if (angle > 135 && angle <= 225) {
-                return GameDirection.Left;
-            } else if (angle > 225 && angle <= 315) {
-                return GameDirection.Down;
-            } else {
-                return GameDirection.Right;
-            }
+    static getDir(vec2: cc.Vec2): GameDirection {
+        let standrad: cc.Vec2 = cc.v2(1, 0);
+        let angle = cc.misc.radiansToDegrees(standrad.signAngle(vec2));
+        console.log(angle);
+        if (angle > 360) {
+            angle -= 360;
+        } else if (angle < 0) {
+            angle += 360;
         }
 
-    
+        if (angle > 45 && angle <= 135) {
+            return GameDirection.Up;
+        } else if (angle > 135 && angle <= 225) {
+            return GameDirection.Left;
+        } else if (angle > 225 && angle <= 315) {
+            return GameDirection.Down;
+        } else {
+            return GameDirection.Right;
+        }
+    }
+
+    static preferAnimFrame(sprite: cc.Sprite, frames: cc.SpriteFrame[], percent: number): cc.SpriteFrame {
+        sprite.spriteFrame = frames[Math.floor(frames.length * percent)];
+        return sprite.spriteFrame;
+    }
 
 
 }

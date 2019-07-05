@@ -55,10 +55,10 @@ export default class GameActor extends GameEventListener {
         return Utils.getDir((enemy.node.position).sub(this.node.position))
     }
 
-    preferAnimFrame(sprite: cc.Sprite, frames: cc.SpriteFrame[], percent: number): cc.SpriteFrame {
-        sprite.spriteFrame = frames[Math.floor(frames.length * percent)];
-        return sprite.spriteFrame;
-    }
+    // preferAnimFrame(sprite: cc.Sprite, frames: cc.SpriteFrame[], percent: number): cc.SpriteFrame {
+    //     sprite.spriteFrame = frames[Math.floor(frames.length * percent)];
+    //     return sprite.spriteFrame;
+    // }
 
     attack() {
         let attackStatus = this.machine.currentStatus as GameActorStatusAttack;

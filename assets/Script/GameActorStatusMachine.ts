@@ -164,7 +164,7 @@ export class GameActorStatusAttack extends GameActorStatusBase {
     isAttacked:boolean = false;
 
     onEnterStatus(){
-        super.onEnterStatus();
+        super.onEnterStatus(); 
     }
 
     update(dt:number){

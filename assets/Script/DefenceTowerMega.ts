@@ -1,6 +1,8 @@
 import GameActor from "./GameAcotr";
 import { GameActorStatusBase, GameActorStatusAttack, GameActorStatusType } from "./GameActorStatusMachine";
 import { GameDirection } from "./Config";
+import Utils from "./Utils";
+import GameFlyObject from "./GameFlyObject";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -16,6 +18,9 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class DefenceTowerMega extends GameActor {
+
+    @property(cc.Prefab)
+    prefabFlyObject: cc.Prefab = null;
 
     @property(cc.Sprite)
     spTower: cc.Sprite = null;
@@ -47,11 +52,11 @@ export default class DefenceTowerMega extends GameActor {
             let attackStatus = status as GameActorStatusAttack;
             let percent = status.statusTime / this.attackAnimTotalTime;
             let frames = attackStatus.dir == GameDirection.Up ? this.sfMegaAttackBacks : this.sfMegaAttackFronts;
-            let currentFrame = this.preferAnimFrame(this.spMegaShooter,frames, percent);
-            if(!attackStatus.isAttacked && currentFrame == frames[this.attackKeyFrame]){
+            let currentFrame = Utils.preferAnimFrame(this.spMegaShooter, frames, percent);
+            if (!attackStatus.isAttacked && currentFrame == frames[this.attackKeyFrame]) {
                 this.attack();
             }
-            
+
         }
 
 
@@ -64,6 +69,19 @@ export default class DefenceTowerMega extends GameActor {
         } else {
             return GameDirection.Down;
         }
+    }
+
+    attack() {
+        super.attack();
+        let enemys = this.getEnemysInRange();
+
+        if (enemys && enemys.length > 0) {
+            let flyObject = cc.instantiate(this.prefabFlyObject).getComponent("GameFlyObject") as GameFlyObject;
+            flyObject.node.parent = this.node.parent;
+            flyObject.node.position = cc.v2(this.node.x, this.node.y + 50);
+            flyObject.startFly(enemys[0],this);
+        }
+
     }
 
 }

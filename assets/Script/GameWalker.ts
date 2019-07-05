@@ -1,6 +1,7 @@
 import { GameActorStatusBase, GameActorStatusType, GameActorStatusWalk } from "./GameActorStatusMachine";
 import { GameDirection } from "./Config";
 import GameActor from "./GameAcotr";
+import Utils from "./Utils";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -58,7 +59,7 @@ export default class GameWalker extends GameActor {
                 spriteFrames = this.spWalkRight;
             }
 
-            this.preferAnimFrame(this.spWalker, spriteFrames, percent);
+            Utils.preferAnimFrame(this.spWalker, spriteFrames, percent);
             this.spWalker.node.scaleX = scaleX;
         }
     }
