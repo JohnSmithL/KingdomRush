@@ -14,31 +14,31 @@ import GameEventListener from "./GameEventListener";
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class GameActor extends GameEventListener {
 
 
-    machine:GameActorStatusMachine = null;
-    attackCoolDownTime:number = 1;
-    attackAnimTotalTime:number = 1;
+    machine: GameActorStatusMachine = null;
+    attackCoolDownTime: number = 1;
+    attackAnimTotalTime: number = 1;
 
     @property(Number)
-    attackKeyFrame:number = 7;
+    attackKeyFrame: number = 7;
 
     @property(Number)
-    attackRange:number = 200;
+    attackRange: number = 200;
 
-    onLoad () {
+    onLoad() {
         this.machine = new GameActorStatusMachine(this);
     }
 
-    preferStatus(status:GameActorStatusBase){
-    
+    preferStatus(status: GameActorStatusBase) {
+
     }
 
-    getEnemysInRange():GameActor[]{
+    getEnemysInRange(): GameActor[] {
         return SelectLevels.getInstance().enemys;
     }
 
@@ -46,13 +46,13 @@ export default class GameActor extends GameEventListener {
     //     return null;
     // }
 
-    update(dt:number){
+    update(dt: number) {
         this.machine.update(dt);
     }
 
-    getEnemyDir(enemys:GameActor[]):GameDirection{
-       let enemy = enemys[0]
-       return Utils.getDir((enemy.node.position).sub(this.node.position))
+    getEnemyDir(enemys: GameActor[]): GameDirection {
+        let enemy = enemys[0]
+        return Utils.getDir((enemy.node.position).sub(this.node.position))
     }
 
     preferAnimFrame(sprite: cc.Sprite, frames: cc.SpriteFrame[], percent: number): cc.SpriteFrame {
@@ -60,7 +60,7 @@ export default class GameActor extends GameEventListener {
         return sprite.spriteFrame;
     }
 
-    attack(){
+    attack() {
         let attackStatus = this.machine.currentStatus as GameActorStatusAttack;
         attackStatus.isAttacked = true;
         console.log("fire");
