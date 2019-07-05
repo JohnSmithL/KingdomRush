@@ -1,0 +1,31 @@
+{
+  "ver": "2.2.0",
+  "uuid": "fc901cc5-8dc9-4076-a9f7-971e760c821f",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "subMetas": {
+    "portraits_towers_0003": {
+      "ver": "1.0.4",
+      "uuid": "73953f6d-e345-4ef0-916b-2265be3ed4b7",
+      "rawTextureUuid": "fc901cc5-8dc9-4076-a9f7-971e760c821f",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0.5,
+      "offsetY": 0.5,
+      "trimX": 11,
+      "trimY": 12,
+      "width": 71,
+      "height": 67,
+      "rawWidth": 92,
+      "rawHeight": 92,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
