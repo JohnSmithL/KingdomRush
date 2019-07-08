@@ -1,6 +1,8 @@
 import GameEventListener from "./GameEventListener";
 import GameActor from "./GameAcotr";
 import Utils from "./Utils";
+import { GameEventHit } from "./GameEventDefine";
+import GameEventDispatcher from "./GameEventDispatcher";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -48,11 +50,11 @@ export default class GameFlyObject extends GameEventListener {
     update(dt: number) {
         this.statusTime += dt;
 
-        if (this, this.statusType = GameFlyObjectStatus.Fly) {
+        if (this.statusType === GameFlyObjectStatus.Fly) {
             let percent = (this.statusTime / this.flyAnimTotalTime) % 1;
             Utils.preferAnimFrame(this.spImage, this.sfFlys, percent);
 
-            let dir = (this.target.node.position).sub(this.trigger.node.position);
+            let dir = (this.target.node.position).sub(this.node.position);
             dir.normalizeSelf();
 
             let angle = cc.misc.radiansToDegrees(dir.signAngle(cc.v2(1, 0)));
@@ -68,11 +70,16 @@ export default class GameFlyObject extends GameEventListener {
             if (this.node.x == this.target.node.x && this.node.y == this.target.node.y) {
                 this.statusTime = 0;
                 this.statusType = GameFlyObjectStatus.Explosion;
+
+                let event = new GameEventHit;
+                event.beHitter = this.target;
+                event.hitter = this.trigger;
+                GameEventDispatcher.getInstance().disPatchEvent(event);
             }
         }
 
-        if (this.statusType == GameFlyObjectStatus.Explosion) {
-            let percent = this.statusTime / this.explosionAnimTime;
+        if (this.statusType === GameFlyObjectStatus.Explosion) {
+            let percent = (this.statusTime / this.explosionAnimTime);
             Utils.preferAnimFrame(this.spImage, this.sfExplosion, percent);
             if (percent > 1) {
                 this.node.removeFromParent(true);

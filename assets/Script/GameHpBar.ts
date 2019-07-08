@@ -1,6 +1,3 @@
-import { DefenceTowerType } from "./Config";
-import GameActor from "./GameAcotr";
-
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
@@ -10,24 +7,16 @@ import GameActor from "./GameAcotr";
 // Learn life-cycle callbacks:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-export enum GameEventType{
-    None,
-    CreatTower,
-    Hit,
-}
 
-export  class GameEventBase{
-    eventType:GameEventType = GameEventType.None;
-}
+const { ccclass, property } = cc._decorator;
 
-export class GameEventCreatTower extends GameEventBase{
-    eventType:GameEventType = GameEventType.CreatTower;
-    towerType:DefenceTowerType;
-    pos:cc.Vec2;
-}
+@ccclass
+export default class GameHpBar extends cc.Component {
 
-export class GameEventHit extends GameEventBase{
-    eventType = GameEventType.Hit;
-    hitter:GameActor;
-    beHitter:GameActor;
+    @property(cc.Sprite)
+    hpBarGreen: cc.Sprite = null;
+
+    setHpPercent(percent: number) {
+        this.hpBarGreen.fillRange = cc.misc.clampf(percent, 0, 1);
+    }
 }

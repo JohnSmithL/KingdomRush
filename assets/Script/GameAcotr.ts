@@ -30,8 +30,18 @@ export default class GameActor extends GameEventListener {
     @property(Number)
     attackRange: number = 200;
 
+    @property(Number)
+    power:number = 40;
+
+    @property(Number)
+    maxHealthPoint:number = 100;
+
+    currentHealthPoint:number;
+
     onLoad() {
+        super.onLoad();
         this.machine = new GameActorStatusMachine(this);
+        this.currentHealthPoint = this.maxHealthPoint;
     }
 
     preferStatus(status: GameActorStatusBase) {

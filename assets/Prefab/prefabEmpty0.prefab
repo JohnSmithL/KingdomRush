@@ -190,6 +190,11 @@
     "_enabled": true,
     "attackKeyFrame": 7,
     "attackRange": 200,
+    "power": 10,
+    "maxHealthPoint": 100,
+    "prefabHpBar": {
+      "__uuid__": "dcd26c5e-ad8a-45fb-9c01-c5511532ea10"
+    },
     "spWalker": {
       "__id__": 3
     },

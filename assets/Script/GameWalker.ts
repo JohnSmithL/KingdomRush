@@ -2,6 +2,8 @@ import { GameActorStatusBase, GameActorStatusType, GameActorStatusWalk } from ".
 import { GameDirection } from "./Config";
 import GameActor from "./GameAcotr";
 import Utils from "./Utils";
+import GameHpBar from "./GameHpBar";
+import { GameEventType, GameEventHit } from "./GameEventDefine";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -17,6 +19,10 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class GameWalker extends GameActor {
+
+    @property(cc.Prefab)
+    prefabHpBar: cc.Prefab = null;
+
     @property(cc.Sprite)
     spWalker: cc.Sprite = null;
 
@@ -35,11 +41,19 @@ export default class GameWalker extends GameActor {
     @property(Number)
     speed: number = 0.5;
 
-    paths:cc.Vec2[];
+    paths: cc.Vec2[];
+    hpBar: GameHpBar = null;
 
 
     onLoad() {
         super.onLoad();
+
+        let hpBar = cc.instantiate(this.prefabHpBar);
+        hpBar.parent = this.node;
+        hpBar.y = 30;
+        this.hpBar = hpBar.getComponent("GameHpBar") as GameHpBar;
+
+        this.eventComponent.registEvent(GameEventType.Hit, this.onHit)
     }
 
     preferStatus(status: GameActorStatusBase) {
@@ -80,5 +94,14 @@ export default class GameWalker extends GameActor {
         // paths.push(cc.v2(100, 100));
         // paths.push(cc.v2(10, 100));
         return this.paths;
+    }
+
+    onHit(event: GameEventHit): boolean {
+        if (event.beHitter == this) {
+            let power = event.hitter.power;
+            this.currentHealthPoint -=power;
+            this.hpBar.setHpPercent(this.currentHealthPoint/this.maxHealthPoint);
+        }
+        return false;
     }
 }
