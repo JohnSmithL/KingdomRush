@@ -4,7 +4,7 @@ import GameWalker from "./GameWalker";
 import { GameActorStatusWalk, GameActorStatusIdle } from "./GameActorStatusMachine";
 import GameActor from "./GameAcotr";
 import DefenceTowerMega from "./DefenceTowerMega";
-import { GameEventCreatTower, GameEventType } from "./GameEventDefine";
+import { GameEventCreatTower, GameEventType, GameEventDie } from "./GameEventDefine";
 import { DefenceTowerType } from "./Config";
 import GameEventListener from "./GameEventListener";
 
@@ -50,6 +50,38 @@ export default class SelectLevels extends GameEventListener {
         towerCreator.node.position = Utils.tileCoordForPosition(this.map, tower0.offset);
         towerCreator.setStatus(TowerCreatorStatus.Common);
 
+
+        this.eventComponent.registEvent(GameEventType.CreatTower, this.onEventCreatTower);
+        this.eventComponent.registEvent(GameEventType.Die, this.onEventDie);
+
+        this.schedule(this.generateEnemy, 3, 20, 5);
+
+        console.log("enemys.length1:" + this.enemys.length);
+    }
+
+
+    onEventCreatTower(event: GameEventCreatTower): boolean {
+        let towerType = event.towerType;
+        if (towerType = DefenceTowerType.Mega) {
+            let tower = cc.instantiate(this.prefabMegaTower).getComponent("DefenceTowerMega") as DefenceTowerMega;
+            tower.node.parent = this.towerParent;
+            tower.node.position = event.pos;
+            tower.machine.onStatusChange(new GameActorStatusIdle);
+        }
+        return false;
+    }
+
+    onEventDie(event: GameEventDie): boolean {
+        let idx = this.enemys.indexOf(event.actor);
+        if (idx != -1) {
+            // this.enemys.slice(idx, 1);
+            this.enemys.shift();
+            console.log("enemys.length2:" + this.enemys.length);
+        }
+        return false;
+    }
+
+    generateEnemy() {
         let enemy = cc.instantiate(this.prefabEnemy).getComponent("GameWalker") as GameWalker;
         enemy.node.parent = this.towerParent;
 
@@ -63,19 +95,18 @@ export default class SelectLevels extends GameEventListener {
         this.enemys.push(enemy);
         let walk = new GameActorStatusWalk;
         enemy.machine.onStatusChange(walk);
-
-        this.eventComponent.registEvent(GameEventType.CreatTower, this.onEventCreatTower);
     }
 
+    gengerateTowerCreator() {
+        let towers = this.map.getObjectGroup("towers");
+        let groups = towers.getObjects();
 
-    onEventCreatTower(event: GameEventCreatTower): boolean {
-        let towerType = event.towerType;
-        if(towerType = DefenceTowerType.Mega){
-             let tower = cc.instantiate(this.prefabMegaTower).getComponent("DefenceTowerMega") as DefenceTowerMega;
-        tower.node.parent = this.towerParent;
-        tower.node.position = event.pos;
-        tower.machine.onStatusChange(new GameActorStatusIdle);
+        for (let i = 0; i < groups.length; i++) {
+            let tower = groups[i];
+            let towerCreator = cc.instantiate(this.prefabTowerCreator).getComponent(TowerCreator);
+            towerCreator.node.parent = this.towerParent;
+            towerCreator.node.position = Utils.tileCoordForPosition(this.map, tower.offset);
+            towerCreator.setStatus(TowerCreatorStatus.Common);
         }
-        return false;
     }
 }

@@ -31,7 +31,7 @@ export default class GameFlyObject extends GameEventListener {
     target: GameActor = null;
     trigger: GameActor = null;
 
-    speed: number = 800;
+    speed: number = 1000;
     statusTime: number = 0;
     flyAnimTotalTime: number = 0.5;
     explosionAnimTime: number = 0.5;
@@ -82,7 +82,8 @@ export default class GameFlyObject extends GameEventListener {
             let percent = (this.statusTime / this.explosionAnimTime);
             Utils.preferAnimFrame(this.spImage, this.sfExplosion, percent);
             if (percent > 1) {
-                this.node.removeFromParent(true);
+                this.node.destroy();
+                // this.node.removeFromParent(true);
             }
 
         }

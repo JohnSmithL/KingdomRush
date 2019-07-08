@@ -31,7 +31,7 @@ export default class GameActor extends GameEventListener {
     attackRange: number = 200;
 
     @property(Number)
-    power:number = 40;
+    power:number = 52;
 
     @property(Number)
     maxHealthPoint:number = 100;
@@ -74,6 +74,10 @@ export default class GameActor extends GameEventListener {
         let attackStatus = this.machine.currentStatus as GameActorStatusAttack;
         attackStatus.isAttacked = true;
         console.log("fire");
+    }
+
+    isDie():boolean{
+        return this.currentHealthPoint < 0;
     }
 
 }

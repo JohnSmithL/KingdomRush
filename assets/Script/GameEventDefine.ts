@@ -14,6 +14,7 @@ export enum GameEventType{
     None,
     CreatTower,
     Hit,
+    Die,
 }
 
 export  class GameEventBase{
@@ -30,4 +31,9 @@ export class GameEventHit extends GameEventBase{
     eventType = GameEventType.Hit;
     hitter:GameActor;
     beHitter:GameActor;
+}
+
+export class GameEventDie extends GameEventBase{
+    eventType = GameEventType.Die;
+    actor:GameActor;
 }

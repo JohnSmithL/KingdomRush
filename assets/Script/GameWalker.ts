@@ -1,4 +1,4 @@
-import { GameActorStatusBase, GameActorStatusType, GameActorStatusWalk } from "./GameActorStatusMachine";
+import { GameActorStatusBase, GameActorStatusType, GameActorStatusWalk, GameActorStatusDie } from "./GameActorStatusMachine";
 import { GameDirection } from "./Config";
 import GameActor from "./GameAcotr";
 import Utils from "./Utils";
@@ -35,8 +35,14 @@ export default class GameWalker extends GameActor {
     @property([cc.SpriteFrame])
     spWalkRight: cc.SpriteFrame[] = [];
 
+    @property([cc.SpriteFrame])
+    sfDie: cc.SpriteFrame[] = [];
+
     @property(Number)
     animWalkTotalTime: number = 1;
+
+    @property(Number)
+    animDieTotalTime: number = 1;
 
     @property(Number)
     speed: number = 0.5;
@@ -75,6 +81,11 @@ export default class GameWalker extends GameActor {
 
             Utils.preferAnimFrame(this.spWalker, spriteFrames, percent);
             this.spWalker.node.scaleX = scaleX;
+        } else if (status.status == GameActorStatusType.Die) {
+            let dieStatus = status as GameActorStatusDie;
+            let percent = Math.min(1, (dieStatus.statusTime / this.animWalkTotalTime));
+            Utils.preferAnimFrame(this.spWalker, this.sfDie, percent);
+
         }
     }
 
@@ -99,8 +110,8 @@ export default class GameWalker extends GameActor {
     onHit(event: GameEventHit): boolean {
         if (event.beHitter == this) {
             let power = event.hitter.power;
-            this.currentHealthPoint -=power;
-            this.hpBar.setHpPercent(this.currentHealthPoint/this.maxHealthPoint);
+            this.currentHealthPoint -= power;
+            this.hpBar.setHpPercent(this.currentHealthPoint / this.maxHealthPoint);
         }
         return false;
     }

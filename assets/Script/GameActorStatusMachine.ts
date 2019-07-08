@@ -2,6 +2,8 @@ import { GameDirection } from "./Config";
 import GameActor from "./GameAcotr";
 import GameWalker from "./GameWalker";
 import Utils from "./Utils";
+import { GameEventDie } from "./GameEventDefine";
+import GameEventDispatcher from "./GameEventDispatcher";
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
@@ -62,7 +64,7 @@ export class GameActorStatusBase {
 
 export class GameActorStatusIdle extends GameActorStatusBase {
     status = GameActorStatusType.Idle;
-    
+
     onEnterStatus() {
         this.machine.actor.preferStatus(this);
     }
@@ -70,7 +72,7 @@ export class GameActorStatusIdle extends GameActorStatusBase {
     update(dt: number) {
         super.update(dt);
         let enemys = this.machine.actor.getEnemysInRange();
-        if(enemys && enemys.length>0 && this.statusTime > this.machine.actor.attackCoolDownTime){
+        if (enemys && enemys.length > 0 && this.statusTime > this.machine.actor.attackCoolDownTime) {
             let attack = new GameActorStatusAttack();
             this.machine.onStatusChange(attack);
             attack.dir = attack.getEnemyDir(enemys);
@@ -140,6 +142,11 @@ export class GameActorStatusWalk extends GameActorStatusBase {
     update(dt: number) {
         super.update(dt);
 
+        if (this.machine.actor.isDie()) {
+            let die = new GameActorStatusDie();
+            this.machine.onStatusChange(die);
+            return;
+        }
         this.machine.actor.preferStatus(this);
 
         if (!this.nextPathPoint) {
@@ -160,31 +167,47 @@ export class GameActorStatusWalk extends GameActorStatusBase {
 
 export class GameActorStatusAttack extends GameActorStatusBase {
     status = GameActorStatusType.Attack;
-    dir:GameDirection;
-    isAttacked:boolean = false;
+    dir: GameDirection;
+    isAttacked: boolean = false;
 
-    onEnterStatus(){
-        super.onEnterStatus(); 
+    onEnterStatus() {
+        super.onEnterStatus();
     }
 
-    update(dt:number){
+    update(dt: number) {
         super.update(dt);
         this.machine.actor.preferStatus(this);
         let percent = this.statusTime / this.machine.actor.attackAnimTotalTime;
 
-        if(percent >=1){
+        if (percent >= 1) {
             let idle = new GameActorStatusIdle;
             this.machine.onStatusChange(idle);
         }
     }
 
-    getEnemyDir(enemys:GameActor[]):GameDirection{
+    getEnemyDir(enemys: GameActor[]): GameDirection {
         return this.machine.actor.getEnemyDir(enemys);
     }
 }
 
 export class GameActorStatusDie extends GameActorStatusBase {
     status = GameActorStatusType.Die;
+
+    onEnterStatus() {
+        let dieEvent = new GameEventDie;
+        dieEvent.actor = this.machine.actor;
+        GameEventDispatcher.getInstance().disPatchEvent(dieEvent);
+    }
+
+    update(dt: number) {
+        super.update(dt);
+        this.machine.actor.preferStatus(this);
+        if (this.statusTime > 2) {
+            this.machine.actor.node.destroy();
+            // this.machine.actor.node.removeFromParent(true);
+        }
+
+    }
 }
 
 export enum GameActorStatusType {

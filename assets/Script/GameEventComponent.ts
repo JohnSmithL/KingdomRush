@@ -20,6 +20,11 @@ export default class GameEventComponent extends cc.Component {
         GameEventDispatcher.getInstance().registComponent(this);
     }
 
+    onDestroy() {
+        console.log("remove " + this.node.name);
+        GameEventDispatcher.getInstance().removeComponent(this);
+    }
+
 
     registEvent(eventType: GameEventType, callBack: (event: GameEventBase) => boolean): void {
         this.events.set(eventType, callBack);
