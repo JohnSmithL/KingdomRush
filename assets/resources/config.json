@@ -1,0 +1,27 @@
+{
+    "towers": {
+        "mega": {
+            "power": 40,
+            "attackRange": 500
+        }
+    },
+    "walkers": {
+        "thief": {
+            "maxHealthPoint": 150,
+            "currentHealthPoint":150,
+            "speed": 1
+        }
+    },
+    "enemys":[
+        {
+            "maxHealthPoint": 150,
+            "currentHealthPoint":150,
+            "speed": 1
+        },
+        {
+            "maxHealthPoint": 150,
+            "currentHealthPoint":150,
+            "speed": 1
+        }
+    ]
+}

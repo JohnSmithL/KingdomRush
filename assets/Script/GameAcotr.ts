@@ -28,15 +28,15 @@ export default class GameActor extends GameEventListener {
     attackKeyFrame: number = 7;
 
     @property(Number)
-    attackRange: number = 200;
+    attackRange: number = 400;
 
     @property(Number)
-    power:number = 52;
+    power: number = 52;
 
     @property(Number)
-    maxHealthPoint:number = 100;
+    maxHealthPoint: number = 100;
 
-    currentHealthPoint:number;
+    currentHealthPoint: number;
 
     onLoad() {
         super.onLoad();
@@ -49,7 +49,15 @@ export default class GameActor extends GameEventListener {
     }
 
     getEnemysInRange(): GameActor[] {
-        return SelectLevels.getInstance().enemys;
+        let enemysInRange: GameActor[] = [];
+        for (let i = 0, length = SelectLevels.getInstance().enemys.length; i < length; i++) {
+            let enemy = SelectLevels.getInstance().enemys[i];
+            let distance = Math.sqrt(Math.pow((enemy.node.x - this.node.x), 2) + Math.pow((enemy.node.y - this.node.y), 2));
+            if (!enemy.isDie() && distance < this.attackRange) {
+                enemysInRange.push(enemy);
+            }
+        }
+        return enemysInRange;
     }
 
     // getEnemysInRange():GameActor[]{
@@ -76,7 +84,7 @@ export default class GameActor extends GameEventListener {
         console.log("fire");
     }
 
-    isDie():boolean{
+    isDie(): boolean {
         return this.currentHealthPoint < 0;
     }
 

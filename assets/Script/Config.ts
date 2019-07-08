@@ -1,3 +1,4 @@
+import SelectLevels from "./SelectLevels";
 
 
 
@@ -15,4 +16,16 @@ export enum GameDirection{
     Down,
     Left,
     Right,
+}
+
+//异步模式
+export class GameConfig{
+    static config:any = null;
+    static loadConfig(){
+        cc.loader.loadRes("config",(error,resource)=>{
+            console.log(resource);
+            GameConfig.config = resource;
+            SelectLevels.getInstance().startGame();
+        });
+    }
 }

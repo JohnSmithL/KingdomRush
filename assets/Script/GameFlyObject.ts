@@ -3,6 +3,7 @@ import GameActor from "./GameAcotr";
 import Utils from "./Utils";
 import { GameEventHit } from "./GameEventDefine";
 import GameEventDispatcher from "./GameEventDispatcher";
+import GamePoolManager, { PoolType } from "./GamePoolManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -15,6 +16,7 @@ import GameEventDispatcher from "./GameEventDispatcher";
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 const { ccclass, property } = cc._decorator;
+const POOLTYPEENUM = cc.Enum(PoolType);
 
 @ccclass
 export default class GameFlyObject extends GameEventListener {
@@ -27,6 +29,9 @@ export default class GameFlyObject extends GameEventListener {
 
     @property([cc.SpriteFrame])
     sfExplosion: cc.SpriteFrame[] = [];
+
+    @property({type:POOLTYPEENUM})
+    flyObjectType:PoolType = PoolType.None;
 
     target: GameActor = null;
     trigger: GameActor = null;
@@ -82,7 +87,9 @@ export default class GameFlyObject extends GameEventListener {
             let percent = (this.statusTime / this.explosionAnimTime);
             Utils.preferAnimFrame(this.spImage, this.sfExplosion, percent);
             if (percent > 1) {
-                this.node.destroy();
+                this.node.removeFromParent(false);
+                GamePoolManager.getInstance().recycleObject(this.flyObjectType,this.node);
+                // this.node.destroy();
                 // this.node.removeFromParent(true);
             }
 

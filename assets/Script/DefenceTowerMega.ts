@@ -1,8 +1,9 @@
 import GameActor from "./GameAcotr";
 import { GameActorStatusBase, GameActorStatusAttack, GameActorStatusType } from "./GameActorStatusMachine";
-import { GameDirection } from "./Config";
+import { GameDirection, GameConfig } from "./Config";
 import Utils from "./Utils";
 import GameFlyObject from "./GameFlyObject";
+import GamePoolManager, { PoolType } from "./GamePoolManager";
 
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
@@ -46,6 +47,14 @@ export default class DefenceTowerMega extends GameActor {
     @property([cc.SpriteFrame])
     sfTowerAttacks: cc.SpriteFrame[] = [];
 
+    onLoad(){
+        super.onLoad();
+        let config = GameConfig.config.json.towers.mega;
+
+        for(let key in config){
+            this[key] = config[key];
+        }
+    }
 
     preferStatus(status: GameActorStatusBase) {
         if (status.status = GameActorStatusType.Attack) {
@@ -76,7 +85,9 @@ export default class DefenceTowerMega extends GameActor {
         let enemys = this.getEnemysInRange();
 
         if (enemys && enemys.length > 0) {
-            let flyObject = cc.instantiate(this.prefabFlyObject).getComponent("GameFlyObject") as GameFlyObject;
+
+            let flyObject = GamePoolManager.getInstance().getObject(PoolType.MegaTowerFlyObject).getComponent("GameFlyObject") as GameFlyObject;
+            // let flyObject = cc.instantiate(this.prefabFlyObject).getComponent("GameFlyObject") as GameFlyObject;
             flyObject.node.parent = this.node.parent;
             flyObject.node.position = cc.v2(this.node.x, this.node.y + 50);
             flyObject.startFly(enemys[0],this);

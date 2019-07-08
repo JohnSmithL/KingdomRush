@@ -1,5 +1,5 @@
 import { GameActorStatusBase, GameActorStatusType, GameActorStatusWalk, GameActorStatusDie } from "./GameActorStatusMachine";
-import { GameDirection } from "./Config";
+import { GameDirection, GameConfig } from "./Config";
 import GameActor from "./GameAcotr";
 import Utils from "./Utils";
 import GameHpBar from "./GameHpBar";
@@ -58,8 +58,13 @@ export default class GameWalker extends GameActor {
         hpBar.parent = this.node;
         hpBar.y = 30;
         this.hpBar = hpBar.getComponent("GameHpBar") as GameHpBar;
-
         this.eventComponent.registEvent(GameEventType.Hit, this.onHit)
+
+        let config = GameConfig.config.json.walkers.thief;
+        
+        for(let key in config){
+            this[key] = config[key];
+        }
     }
 
     preferStatus(status: GameActorStatusBase) {

@@ -58,5 +58,17 @@ export default class Utils {
         return sprite.spriteFrame;
     }
 
+    static orderByPosY(nodes: cc.Node[]) {
+        nodes.sort(Utils.order);
+    }
+
+    static order(node0: cc.Node, node1: cc.Node): number {
+        if (node0.y > node1.y) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
 
 }

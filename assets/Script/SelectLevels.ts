@@ -5,7 +5,7 @@ import { GameActorStatusWalk, GameActorStatusIdle } from "./GameActorStatusMachi
 import GameActor from "./GameAcotr";
 import DefenceTowerMega from "./DefenceTowerMega";
 import { GameEventCreatTower, GameEventType, GameEventDie } from "./GameEventDefine";
-import { DefenceTowerType } from "./Config";
+import { DefenceTowerType, GameConfig } from "./Config";
 import GameEventListener from "./GameEventListener";
 
 const { ccclass, property } = cc._decorator;
@@ -19,6 +19,10 @@ export default class SelectLevels extends GameEventListener {
         return SelectLevels._instance;
 
     }
+
+    @property(cc.Prefab)
+    prefabPoolManager: cc.Prefab = null;
+
     @property(cc.TiledMap)
     map: cc.TiledMap = null;
 
@@ -31,32 +35,27 @@ export default class SelectLevels extends GameEventListener {
     @property(cc.Prefab)
     prefabEnemy: cc.Prefab = null;
 
-    enemys: GameActor[] = [];
-
     @property(cc.Prefab)
     prefabMegaTower: cc.Prefab = null;
 
+    enemys: GameActor[] = [];
 
 
     onLoad() {
         super.onLoad();
         SelectLevels._instance = this;
-        let towers = this.map.getObjectGroup("towers");
-        let tower0 = towers.getObject("tower0");
-        // this.sprite.node.position = Utils.tileCoordForPosition(this.map,tower0.offset);
+        GameConfig.loadConfig();
+    }
 
-        let towerCreator = cc.instantiate(this.prefabTowerCreator).getComponent(TowerCreator);
-        towerCreator.node.parent = this.towerParent;
-        towerCreator.node.position = Utils.tileCoordForPosition(this.map, tower0.offset);
-        towerCreator.setStatus(TowerCreatorStatus.Common);
-
+    startGame() {
+        let poolManager = cc.instantiate(this.prefabPoolManager);
+        poolManager.parent = this.node;
 
         this.eventComponent.registEvent(GameEventType.CreatTower, this.onEventCreatTower);
         this.eventComponent.registEvent(GameEventType.Die, this.onEventDie);
 
-        this.schedule(this.generateEnemy, 3, 20, 5);
-
-        console.log("enemys.length1:" + this.enemys.length);
+        this.gengerateTowerCreator();
+        this.schedule(this.generateEnemy, 3, 20, 1);
     }
 
 
@@ -74,9 +73,8 @@ export default class SelectLevels extends GameEventListener {
     onEventDie(event: GameEventDie): boolean {
         let idx = this.enemys.indexOf(event.actor);
         if (idx != -1) {
-            // this.enemys.slice(idx, 1);
-            this.enemys.shift();
-            console.log("enemys.length2:" + this.enemys.length);
+            this.enemys.splice(idx, 1);
+            // this.enemys.shift();
         }
         return false;
     }
@@ -107,6 +105,21 @@ export default class SelectLevels extends GameEventListener {
             towerCreator.node.parent = this.towerParent;
             towerCreator.node.position = Utils.tileCoordForPosition(this.map, tower.offset);
             towerCreator.setStatus(TowerCreatorStatus.Common);
+        }
+    }
+
+    update(dt) {
+        let nodes: cc.Node[] = [];
+
+        for (let i = 0, length = this.enemys.length; i < length; i++) {
+            let enemy = this.enemys[i];
+            nodes.push(enemy.node);
+        }
+        Utils.orderByPosY(nodes);
+
+        for (let i = 0, lenght = nodes.length; i < lenght; i++) {
+            let node = nodes[i];
+            node.zIndex = i;
         }
     }
 }

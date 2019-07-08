@@ -292,7 +292,9 @@
     },
     "_enabled": true,
     "attackKeyFrame": 7,
-    "attackRange": 200,
+    "attackRange": 400,
+    "power": 52,
+    "maxHealthPoint": 100,
     "prefabFlyObject": {
       "__uuid__": "7893fb3e-5068-4e08-9a7f-260ac2707fc8"
     },
