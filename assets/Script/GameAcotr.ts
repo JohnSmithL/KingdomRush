@@ -81,7 +81,6 @@ export default class GameActor extends GameEventListener {
     attack() {
         let attackStatus = this.machine.currentStatus as GameActorStatusAttack;
         attackStatus.isAttacked = true;
-        console.log("fire");
     }
 
     isDie(): boolean {

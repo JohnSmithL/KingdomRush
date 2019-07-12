@@ -29,13 +29,11 @@ export default class CameraController extends cc.Component {
     }
 
     onTouchStart(touch: cc.Event.EventTouch) {
-        console.log("touchstart");
         this.updateTouchPos(this.touchIdx, touch.getLocation());
         this.touchIdx++;
     }
 
     onTouchMove(touch: cc.Event.EventTouch) {
-        console.log("touchmove");
         if (this.touchPoses.length == 1) {
             this.camera.node.position = this.camera.node.position.sub(touch.getDelta());
         } else {
@@ -58,7 +56,6 @@ export default class CameraController extends cc.Component {
     }
 
     onTouchEnd(touch: cc.Event.EventTouch) {
-        console.log("touchend");
         this.touchIdx--;
         if (this.touchIdx <= 0) {
             this.touchPoses.splice(0, this.touchPoses.length);
@@ -68,7 +65,6 @@ export default class CameraController extends cc.Component {
     }
 
     onTouchCancel(touch: cc.Event.EventTouch) {
-        console.log("touchcancel");
         this.touchIdx--;
         if (this.touchIdx <= 0) {
             this.touchPoses.splice(0, this.touchPoses.length);

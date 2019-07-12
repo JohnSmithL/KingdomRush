@@ -110,7 +110,6 @@ export default class TowerCreator extends cc.Component {
             this.spBar.fillRange += dt;
             this.spBar.fillRange = Math.min(this.spBar.fillRange, 1);
             if (this.spBar.fillRange == 1) {
-                console.log("Constructed successfully");
                 this.status = TowerCreatorStatus.None;
 
                 let event = new GameEventCreatTower();

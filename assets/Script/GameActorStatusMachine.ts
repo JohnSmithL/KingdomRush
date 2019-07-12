@@ -158,13 +158,11 @@ export class GameActorStatusWalk extends GameActorStatusBase {
             Math.min(currentpos.x, this.nextPathPoint.x), Math.max(currentpos.x, this.nextPathPoint.x));
         this.machine.actor.node.y = cc.misc.clampf(currentpos.y + this.moveDir.y * dt * speed,
             Math.min(currentpos.y, this.nextPathPoint.y), Math.max(currentpos.y, this.nextPathPoint.y));
-
         if (this.machine.actor.node.x == this.nextPathPoint.x && this.machine.actor.node.y == this.nextPathPoint.y) {
             this.goToNextPoint();
         }
     }
 }
-
 export class GameActorStatusAttack extends GameActorStatusBase {
     status = GameActorStatusType.Attack;
     dir: GameDirection;

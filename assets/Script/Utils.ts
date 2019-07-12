@@ -35,7 +35,6 @@ export default class Utils {
     static getDir(vec2: cc.Vec2): GameDirection {
         let standrad: cc.Vec2 = cc.v2(1, 0);
         let angle = cc.misc.radiansToDegrees(standrad.signAngle(vec2));
-        console.log(angle);
         if (angle > 360) {
             angle -= 360;
         } else if (angle < 0) {

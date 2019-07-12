@@ -71,6 +71,7 @@ export default class DefenceTowerMega extends GameActor {
 
     }
 
+
     getEnemyDir(enemys: GameActor[]): GameDirection {
         let enemy = enemys[0];
         if (enemy.node.y > this.node.y) {
